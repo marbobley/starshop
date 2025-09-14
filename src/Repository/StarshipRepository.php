@@ -1,7 +1,6 @@
 <?php
 namespace App\Repository;
 
-use App\Exception\StarshipException\StarshipException;
 use App\Model\Starship;
 use Psr\Log\LoggerInterface;
 
@@ -22,7 +21,7 @@ class StarshipRepository
         ];
     }
 
-    public function find(int $id): Starship
+    public function find(int $id): ?Starship
     {
         foreach ($this->findAll() as $starship) {
             if ($starship->getId() === $id) {
@@ -30,6 +29,6 @@ class StarshipRepository
             }
         }
 
-        throw new StarshipException('Starship not found');
+        return null;
     }
 }
