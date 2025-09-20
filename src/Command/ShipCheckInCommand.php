@@ -44,8 +44,7 @@ class ShipCheckInCommand extends Command
         }
         $io->comment(sprintf('Checking-in starship: %s', $ship->getName()));
 
-        $ship->setArrivedAt(new \DateTimeImmutable('now'));
-        $ship->setStatus(StarshipStatusEnum::WAITING);
+        $ship->checkIn();
         $this->em->flush();
 
         $io->success('Starship checked-in.');
