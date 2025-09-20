@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Starship;
+use App\Model\StarshipStatusEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,17 @@ class StarshipRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Starship::class);
+    }
+
+    public function findNotInStatus(StarshipStatusEnum $starshipStatusEnum): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.status != :status')
+            ->orderBy('s.arrivedAt', 'DESC')
+            ->setParameter('status', $starshipStatusEnum)
+            ->getQuery()
+            ->getResult()
+        ;        
     }
 
 //    /**
