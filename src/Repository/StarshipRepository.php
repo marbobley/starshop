@@ -6,6 +6,8 @@ use App\Entity\Starship;
 use App\Model\StarshipStatusEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 
 /**
  * @extends ServiceEntityRepository<Starship>
@@ -16,40 +18,43 @@ class StarshipRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Starship::class);
     }
-
-    public function findNotInStatus(StarshipStatusEnum $starshipStatusEnum): array
+    public function findIncomplete(): Pagerfanta
     {
-        return $this->createQueryBuilder('s')
+        $query = $this->createQueryBuilder('s')
             ->where('s.status != :status')
             ->orderBy('s.arrivedAt', 'DESC')
-            ->setParameter('status', $starshipStatusEnum)
-            ->getQuery()
-            ->getResult()
-        ;        
+            ->setParameter('status', StarshipStatusEnum::COMPLETED)
+            ->getQuery();
+        return new Pagerfanta(new QueryAdapter($query));
     }
 
-//    /**
-//     * @return Starship[] Returns an array of Starship objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?Starship
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findMyShip(): Starship
+    {
+        return $this->findAll()[0];
+    }
+    //    /**
+    //     * @return Starship[] Returns an array of Starship objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('s')
+    //            ->andWhere('s.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('s.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Starship
+    //    {
+    //        return $this->createQueryBuilder('s')
+    //            ->andWhere('s.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

@@ -12,7 +12,23 @@
 			<h1 class="text-4xl font-semibold mb-8">
 				Ship Repair Queue
 			</h1>
-
+			<div class="text-slate-400 mb-4">
+				{{ ships.nbResults }}
+				ships (Page
+				{{ ships.currentPage }}
+				of
+				{{ ships.nbPages }})
+			</div>
+			{% if ships.haveToPaginate %}
+                <div class="flex justify-around mt-3 underline font-semibold">
+                    {% if ships.hasPreviousPage %}
+                        <a href="{{ path('app_homepage_find', {page: ships.getPreviousPage}) }}">&lt; Previous</a>
+                    {% endif %}
+                    {% if ships.hasNextPage %}
+                        <a href="{{ path('app_homepage_find', {page: ships.getNextPage}) }}">Next &gt;</a>
+                    {% endif %}
+                </div>
+            {% endif %}
 			<div
 				class="space-y-5">
 				<!-- start ship item -->
