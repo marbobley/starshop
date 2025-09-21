@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Starship;
 use App\Entity\StarshipPart;
+use App\Factory\DroidFactory;
 use App\Factory\StarshipFactory;
 use App\Factory\StarshipPartFactory;
 use App\Model\StarshipStatusEnum;
@@ -57,6 +58,7 @@ class AppFixtures extends Fixture
         StarshipPartFactory::createMany(100, [
             'starship' => $starship,
         ]);
+        DroidFactory::createMany(100);
 
         $starshipPart = StarshipPartFactory::createOne([
             'name' => 'Toilet Paper',
@@ -65,6 +67,5 @@ class AppFixtures extends Fixture
 
         $ship1->removePart($starshipPart);
         $manager->flush();
-        dump($starshipPart);
     }
 }

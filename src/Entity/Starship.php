@@ -54,9 +54,16 @@ class Starship
     #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $parts;
 
+    /**
+     * @var Collection<int, Droid>
+     */
+    #[ORM\ManyToMany(targetEntity: Droid::class, inversedBy: 'starships')]
+    private Collection $droids;
+
     public function __construct()
     {
         $this->parts = new ArrayCollection();
+        $this->droids = new ArrayCollection();
     }
 
     public function getStatusString(): string
@@ -258,6 +265,30 @@ class Starship
                 $part->setStarship(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Droid>
+     */
+    public function getDroids(): Collection
+    {
+        return $this->droids;
+    }
+
+    public function addDroid(Droid $droid): static
+    {
+        if (!$this->droids->contains($droid)) {
+            $this->droids->add($droid);
+        }
+
+        return $this;
+    }
+
+    public function removeDroid(Droid $droid): static
+    {
+        $this->droids->removeElement($droid);
 
         return $this;
     }
