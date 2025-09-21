@@ -28,13 +28,14 @@ class AppFixtures extends Fixture
             'status' => StarshipStatusEnum::COMPLETED,
             'arrivedAt' => new \DateTimeImmutable('-1 week'),
         ]);
-        StarshipFactory::createOne([
+
+        $ship1 = StarshipFactory::createOne([
             'name' => 'USS Wanderlust (NCC-2024-W)',
             'class' => 'Delta Tourist',
             'captain' => 'Kathryn Journeyway',
             'status' => StarshipStatusEnum::WAITING,
             'arrivedAt' => new \DateTimeImmutable('-1 month'),
-        ]);
+        ])->_real();
 
         $starship = new Starship();
         $starship->setName('USS Taco Tuesday');
@@ -42,7 +43,7 @@ class AppFixtures extends Fixture
         $starship->checkIn();
         $starship->setCaptain('James T. Nacho');
         $manager->persist($starship);
-        
+
         $part = new StarshipPart();
         $part->setStarship($starship);
         $part->setName('spoiler');
@@ -53,9 +54,17 @@ class AppFixtures extends Fixture
 
         StarshipFactory::createMany(50);
         StarshipPartFactory::createMany(100);
-         StarshipPartFactory::createMany(100, [
+        StarshipPartFactory::createMany(100, [
             'starship' => $starship,
         ]);
 
+        $starshipPart = StarshipPartFactory::createOne([
+            'name' => 'Toilet Paper',
+            'starship' => $ship1,
+        ])->_real();
+
+        $ship1->removePart($starshipPart);
+        $manager->flush();
+        dump($starshipPart);
     }
 }
