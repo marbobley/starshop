@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Starship;
+use App\Entity\StarshipPart;
 use App\Factory\StarshipFactory;
 use App\Factory\StarshipPartFactory;
 use App\Model\StarshipStatusEnum;
@@ -34,7 +35,21 @@ class AppFixtures extends Fixture
             'status' => StarshipStatusEnum::WAITING,
             'arrivedAt' => new \DateTimeImmutable('-1 month'),
         ]);
-        StarshipFactory::createMany(20);
-        StarshipPartFactory::createMany(50);
+
+        $starship = new Starship();
+        $starship->setName('USS Taco Tuesday');
+        $starship->setClass('Tex-Mex');
+        $starship->checkIn();
+        $starship->setCaptain('James T. Nacho');
+        $manager->persist($starship);
+        
+        $part = new StarshipPart();
+        $part->setStarship($starship);
+        $part->setName('spoiler');
+        $part->setNotes('There\'s no air drag in space, but it looks cool.');
+        $part->setPrice(500);
+        $manager->persist($part);
+        $manager->flush();
+
     }
 }
