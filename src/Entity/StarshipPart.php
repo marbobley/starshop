@@ -33,6 +33,10 @@ class StarshipPart
     #[Timestampable(on: 'create')]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'parts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Starship $starship = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -110,6 +114,18 @@ class StarshipPart
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getStarship(): ?Starship
+    {
+        return $this->starship;
+    }
+
+    public function setStarship(?Starship $starship): static
+    {
+        $this->starship = $starship;
 
         return $this;
     }
