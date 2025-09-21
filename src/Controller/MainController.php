@@ -16,12 +16,14 @@ use Symfony\Component\Routing\Attribute\Route;
 class MainController extends AbstractController
 {
     #[Route('/', name: 'app_homepage')]
-    public function homepage(
+    public function homepage_find(
         StarshipRepository $starshipRepository,
+        Request $request
     ): Response {
-        $ships = $starshipRepository->findAll();
-        $myShip = $ships[array_rand($ships)];
-
+        $ships = $starshipRepository->findIncomplete();
+        $ships->setMaxPerPage(5);
+        $ships->setCurrentPage($request->query->get('page', 1));
+        $myShip = $starshipRepository->findMyShip();
         return $this->render('main/homepage.html.twig', [
             'myShip' => $myShip,
             'ships' => $ships,
@@ -45,20 +47,5 @@ class MainController extends AbstractController
             'myShip' => $myShip,
             'ships' => $ships,
         ]);
-    }
-
-    #[Route('/find', name: 'app_homepage_find')]
-    public function homepage_find(
-        StarshipRepository $starshipRepository,
-        Request $request
-    ): Response {
-        $ships = $starshipRepository->findIncomplete();
-        $ships->setMaxPerPage(5);
-        $ships->setCurrentPage($request->query->get('page', 1));
-        $myShip = $starshipRepository->findMyShip();
-        return $this->render('main/homepage.html.twig', [
-            'myShip' => $myShip,
-            'ships' => $ships,
-        ]);
-    }
+    }    
 }
