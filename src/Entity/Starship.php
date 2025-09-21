@@ -1,14 +1,16 @@
 <?php
-
 namespace App\Entity;
 
 use App\Model\StarshipStatusEnum;
+use App\Repository\StarshipPartRepository;
 use App\Repository\StarshipRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation\Slug;
 use Gedmo\Mapping\Annotation\Timestampable;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: StarshipRepository::class)]
 class Starship
@@ -72,7 +74,7 @@ class Starship
 
     /**
      * Get the value of id
-     */ 
+     */
     public function getId()
     {
         return $this->id;
@@ -82,7 +84,7 @@ class Starship
      * Set the value of id
      *
      * @return  self
-     */ 
+     */
     public function setId($id)
     {
         $this->id = $id;
@@ -92,7 +94,7 @@ class Starship
 
     /**
      * Get the value of arrivedAt
-     */ 
+     */
     public function getArrivedAt()
     {
         return $this->arrivedAt;
@@ -102,7 +104,7 @@ class Starship
      * Set the value of arrivedAt
      *
      * @return  self
-     */ 
+     */
     public function setArrivedAt($arrivedAt)
     {
         $this->arrivedAt = $arrivedAt;
@@ -112,7 +114,7 @@ class Starship
 
     /**
      * Get the value of name
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -122,7 +124,7 @@ class Starship
      * Set the value of name
      *
      * @return  self
-     */ 
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -132,7 +134,7 @@ class Starship
 
     /**
      * Get the value of class
-     */ 
+     */
     public function getClass()
     {
         return $this->class;
@@ -142,7 +144,7 @@ class Starship
      * Set the value of class
      *
      * @return  self
-     */ 
+     */
     public function setClass($class)
     {
         $this->class = $class;
@@ -152,7 +154,7 @@ class Starship
 
     /**
      * Get the value of captain
-     */ 
+     */
     public function getCaptain()
     {
         return $this->captain;
@@ -162,7 +164,7 @@ class Starship
      * Set the value of captain
      *
      * @return  self
-     */ 
+     */
     public function setCaptain($captain)
     {
         $this->captain = $captain;
@@ -174,7 +176,7 @@ class Starship
      * Set the value of status
      *
      * @return  self
-     */ 
+     */
     public function setStatus($status)
     {
         $this->status = $status;
@@ -231,6 +233,11 @@ class Starship
     public function getParts(): Collection
     {
         return $this->parts;
+    }
+
+    public function getExpensiveParts(): Collection
+    {
+        return $this->parts->matching(StarshipPartRepository::createExpensiveCriteria());
     }
 
     public function addPart(StarshipPart $part): static
