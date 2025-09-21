@@ -14,8 +14,7 @@ final class PartController extends AbstractController
     public function index(StarshipPartRepository $repository, Request $request): Response
     {
         $query = $request->query->get('query');
-        $parts = $repository->findAllOrderedByPrice($query);
-        // $parts = $repository->findAll();
+        $parts = $repository->findAllOrderedByPrice($query ? $query : '');
         return $this->render('part/index.html.twig', [
             'parts' => $parts,
         ]);
