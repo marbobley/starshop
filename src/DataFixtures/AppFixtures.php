@@ -51,5 +51,11 @@ class AppFixtures extends Fixture
         $manager->persist($part);
         $manager->flush();
 
+        StarshipFactory::createMany(50);
+        StarshipPartFactory::createMany(100);
+         StarshipPartFactory::createMany(100, [
+            'starship' => $starship,
+        ]);
+
     }
 }
