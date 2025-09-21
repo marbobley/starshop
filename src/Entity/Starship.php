@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity;
 
 use App\Model\StarshipStatusEnum;
@@ -291,5 +292,10 @@ class Starship
         $this->droids->removeElement($droid);
 
         return $this;
+    }
+    
+    public function getDroidNames(): string
+    {
+        return implode(', ', $this->droids->map(fn(Droid $droid) => $droid->getName())->toArray());
     }
 }
