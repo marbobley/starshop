@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Starship;
+use App\Repository\StarshipPartRepository;
 use App\Repository\StarshipRepository;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,9 +15,13 @@ class StarshipController extends AbstractController
     #[Route('/starships/{slug}', name : 'app_starship_show', methods: ['GET'])]
     public function show(
         #[MapEntity(mapping: ['slug' => 'slug'])]
-        Starship $ship
+        Starship $ship,
+        StarshipPartRepository $partRepository,
         ): Response
     {
+
+        $parts = $partRepository->findBy(['starship' => $ship]);
+        dd($parts);
         return $this->render('starship/show.html.twig', [
             'ship' => $ship,
         ]);
