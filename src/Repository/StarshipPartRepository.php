@@ -32,6 +32,21 @@ class StarshipPartRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findAllOrderedByPrice(string $search = ''): array
+    {
+        $qb = $this->createQueryBuilder('sp')
+            ->orderBy('sp.price', 'DESC')
+            ->innerJoin('sp.starship', 's')
+            ->addSelect('s')
+        ;
+        if ($search) {
+            $qb->andWhere('LOWER(sp.name) LIKE :search OR LOWER(sp.notes) LIKE :search')
+                ->setParameter('search', '%'.$search.'%');
+        }
+        return $qb->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return StarshipPart[] Returns an array of StarshipPart objects
     //     */
